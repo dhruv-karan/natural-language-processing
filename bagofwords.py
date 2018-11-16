@@ -1,6 +1,8 @@
 # Tokenization of paragraphs/sentences
 import nltk
 import re
+import heapq
+import numpy as np
 paragraph = """Thank you all so very much. Thank you to the Academy. 
                Thank you to all of you in this room. I have to congratulate 
                the other incredible nominees this year. The Revenant was 
@@ -49,3 +51,21 @@ for word in sentence:
             word_count[w] = 1
         else:
             word_count[w] +=1
+            
+most_freq = heapq.nlargest(100,word_count,key=word_count.get)
+
+X = []
+
+for sent  in sentence:
+    vector =[]
+    for word   in most_freq:
+        if word in nltk.word_tokenize(sent):
+            vector.append(1)
+        else:
+            vector.append(0)
+    X.append(vector)
+
+
+X =np.asarray(X)
+
+
