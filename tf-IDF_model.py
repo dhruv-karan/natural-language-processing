@@ -79,14 +79,16 @@ for word in most_freq:
     tf_matrix[word] = doc_tf
             
             
-            
-            
-            
-            
-            
-            
+# Creating the Tf-Idf Model
+tfidf_matrix = []
+for word in tf_matrix.keys():
+    tfidf = []
+    for value in tf_matrix[word]:
+        score = value * idf_matrix[word]
+        tfidf.append(score)
+    tfidf_matrix.append(tfidf)   
+    
+# Finishing the Tf-Tdf model
+X = np.asarray(tfidf_matrix)
 
-
-
-
-
+X = np.transpose(X)
