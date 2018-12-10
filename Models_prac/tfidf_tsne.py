@@ -22,8 +22,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 def main():
     sentences, word2idx = get_wikipedia_data(n_files=10,n_vocab=1500, by_paragraph=True)
     with open('w2v_word2idx.json','w') as f:
-         json.dump(word2idx,f)
-         
+         json.dump(word2idx,f)     
     V = len(word2idx)
     N = len(sentences)
     A= np.zeros(V,N)
@@ -34,10 +33,7 @@ def main():
         j+=1
     print("finished getting raw counts")
 
-transform  = TfidfTransformer()
-A = transform.fit_transform(A)
-A = A.array()
-
+ 
 idx2word = {v:k for k,v in word2idx.iteritems()}
 
  
