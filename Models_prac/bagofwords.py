@@ -36,7 +36,7 @@ paragraph = """Thank you all so very much. Thank you to the Academy.
                
                
 sentence = nltk.sent_tokenize(paragraph)
-
+type(sentence)
 for i in range(len(sentence)):
     sentence[i] = sentence[i].lower()
     sentence[i] = re.sub(r'\W',' ', sentence[i])

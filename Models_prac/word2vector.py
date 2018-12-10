@@ -23,6 +23,7 @@ for paragraph in soup.find_all('p'):
     text += paragraph.text
     
     
+    
 # Preprocessing the data
 text = re.sub(r'\[[0-9]*\]',' ',text)
 text = re.sub(r'\s+',' ',text)
@@ -33,7 +34,7 @@ text = re.sub(r'\s+',' ',text)
 # Preparing the dataset
 sentences = nltk.sent_tokenize(text)
 
-sentences = [nltk.word_tokenize(sentence) for sentence in sentences]
+senten = [nltk.word_tokenize(sentence) for sentence in sentences]
 
 for i in range(len(sentences)):
     sentences[i] = [word for word in sentences[i] if word not in stopwords.words('english')]
