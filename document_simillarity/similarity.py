@@ -1,9 +1,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
-TP= "https://www.tutorialspoint.com/computer_programming/computer_programming_environment.htm"
-QUORA = 'https://www.quora.com/What-is-the-programming-environment'
-CLASS1= "col-md-7 middle-col"
-CLASS2= "ExpandedAnswer ExpandedContent"  
+import numpy as np
+
     
 def scrape(url,id_):
     page = urllib.request.urlopen(url)
@@ -23,23 +21,65 @@ def scrape(url,id_):
             data.remove(i)
     return data
 
+def token_to_sentence(mylist):
+    word = ' '
+    for i in mylist:
+        if type(i)==int:
+            print(i)
+        else:
+            word = word + i + ' '
+    return word
 
+from nltk.stem import PorterStemmer
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-no_features = 100
+def tdidf_vec(no_features,url,class_):
+    tfidf_vectorizer = TfidfVectorizer(max_df=10, min_df=1, max_features=no_features, stop_words='english')
+    tfidf_vectorizer.fit_transform(scrape(url,class_))
+    return tfidf_vectorizer.get_feature_names()
+def Stem(mylist):
+    pst = PorterStemmer()
+    for t,i in enumerate(mylist):
+        i = pst.stem(i)
+        mylist[t] = i
+        
 
-tfidf_vectorizer = TfidfVectorizer(max_df=10, min_df=1, max_features=no_features, stop_words='english')
-tfidf = tfidf_vectorizer.fit_transform(scrape(TP,CLASS1))
-tfidf_feature_names = tfidf_vectorizer.get_feature_names()
+TP= "https://www.tutorialspoint.com/computer_programming/computer_programming_environment.htm"
+QUORA = 'https://www.quora.com/What-is-the-programming-environment'
+BASICS = 'https://www.tutorialspoint.com/computer_programming/computer_programming_overview.htm'
+CLASS1= "col-md-7 middle-col" # this class is corresponding to the div in url TP
+CLASS2= "ExpandedAnswer ExpandedContent"  # this class is corresponding to the div in url Quora
+CLASS3 = 'col-md-7 middle-col' # this class is corresponding to the div in url BAsics
 
-no_features = 100
 
-tfidf_vectorizer = TfidfVectorizer(max_df=10, min_df=1, max_features=no_features, stop_words='english')
-tfidf = tfidf_vectorizer.fit_transform(scrape(QUORA,CLASS2))
-tfidf_feature_names_1 = tfidf_vectorizer.get_feature_names()
+tfidf_feature_names = tdidf_vec(120,TP,CLASS1)
+tfidf_feature_names_1 = tdidf_vec(120,QUORA,CLASS2)
+tfidf_feature_names_2 = tdidf_vec(120,BASICS,CLASS3)
 
+tfidf_feature_names = token_to_sentence(tfidf_feature_names)
+tfidf_feature_names_1 = token_to_sentence(tfidf_feature_names_1)
+tfidf_feature_names_2 = token_to_sentence(tfidf_feature_names_2)
+
+
+
+documents = [tfidf_feature_names,tfidf_feature_names_1,tfidf_feature_names_2]
+# Scikit Learn
+from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
+
+# Create the Document Term Matrix
+count_vectorizer = CountVectorizer(stop_words='english')
+count_vectorizer = CountVectorizer()
+sparse_matrix = count_vectorizer.fit_transform(documents)
+
+
+doc_term_matrix = sparse_matrix.todense()
+df = pd.DataFrame(doc_term_matrix,
+                  columns=count_vectorizer.get_feature_names())
+df
+
+
+# Compute Cosine Similarity
 from sklearn.metrics.pairwise import cosine_similarity
-
-
-simlarity = cosine_similarity(tfidf_feature_names,tfidf_feature_names_1)
+similarity = cosine_similarity(df, df)
