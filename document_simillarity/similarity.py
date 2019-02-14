@@ -1,6 +1,5 @@
 import urllib.request
 from bs4 import BeautifulSoup
-import numpy as np
 
     
 def scrape(url,id_):
@@ -46,16 +45,13 @@ def Stem(mylist):
         
 
 TP= "https://www.tutorialspoint.com/computer_programming/computer_programming_environment.htm"
-QUORA = 'https://www.quora.com/What-is-the-programming-environment'
+HOME = 'https://www.tutorialspoint.com/computer_programming/index.htm'
 BASICS = 'https://www.tutorialspoint.com/computer_programming/computer_programming_overview.htm'
-CLASS1= "col-md-7 middle-col" # this class is corresponding to the div in url TP
-CLASS2= "ExpandedAnswer ExpandedContent"  # this class is corresponding to the div in url Quora
-CLASS3 = 'col-md-7 middle-col' # this class is corresponding to the div in url BAsics
+CLASS= "col-md-7 middle-col" # this class is corresponding to the div in url TP
 
-
-tfidf_feature_names = tdidf_vec(120,TP,CLASS1)
-tfidf_feature_names_1 = tdidf_vec(120,QUORA,CLASS2)
-tfidf_feature_names_2 = tdidf_vec(120,BASICS,CLASS3)
+tfidf_feature_names_1 = tdidf_vec(150,HOME,CLASS)
+tfidf_feature_names = tdidf_vec(150,TP,CLASS)
+tfidf_feature_names_2 = tdidf_vec(150,BASICS,CLASS)
 
 tfidf_feature_names = token_to_sentence(tfidf_feature_names)
 tfidf_feature_names_1 = token_to_sentence(tfidf_feature_names_1)
@@ -77,6 +73,7 @@ sparse_matrix = count_vectorizer.fit_transform(documents)
 doc_term_matrix = sparse_matrix.todense()
 df = pd.DataFrame(doc_term_matrix,
                   columns=count_vectorizer.get_feature_names())
+
 df
 
 
